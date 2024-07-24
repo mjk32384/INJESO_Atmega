@@ -12,6 +12,7 @@
 #include "serial.h"
 #include "sensor.h"
 #include "AHRS.h"
+#include "PID.h"
 
 #define BUFFER_SIZE 128
 #define SAMPLING_RATE 64
@@ -46,7 +47,7 @@ ISR(USART1_RX_vect) {
 	
 }
 
-
+/*
 int main(void) {
 	int16_t accel[3], gyro[3], mag[3];
 	//float magBias[3], magScale[3];
@@ -98,22 +99,28 @@ int main(void) {
 	}
 }
 
-/*
-
+*/
 
 int main(void) {
 
-	UART1_init(57600);
-	UART1_receive();
-	UART1_transmit_string_LF("START!!!");
-	
-	
+	PWM_init();
+	sei(); // Enable global interrupts
+
 	while (1) {
-		UART1_transmit_int16(1231);
-		UART1_transmit('\n');
-		_delay_ms(500);
+		//int16_t control_value = PID_control(target_value, current_value);
+		
+		
+		servo_control(250);
+		_delay_ms(1000);
+		servo_control(0);
+		_delay_ms(1000);
+		servo_control(-250);
+		_delay_ms(1000);
+		
 	}
 
 	return 0;
-}*/
+
+}
+
 
