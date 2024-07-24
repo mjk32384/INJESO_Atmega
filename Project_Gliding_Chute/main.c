@@ -16,11 +16,6 @@
 #define BUFFER_SIZE 128
 #define SAMPLING_RATE 64
 
-#define SAMPLING_RATE 64
-#define SAMPLING_RATE 64
-#define SAMPLING_RATE 64
-
-
 char uart0_buffer[BUFFER_SIZE];
 char uart1_buffer[BUFFER_SIZE];
 
