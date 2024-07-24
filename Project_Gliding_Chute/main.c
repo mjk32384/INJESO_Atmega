@@ -60,11 +60,25 @@ int main(void) {
 	I2C_Init();
 	MPU9250_Init();
 	AK8963_Init();
-	//UART1_transmit_string_LF("Complete initiation!!!");
 	
+	//UART1_transmit_string_LF("Complete initiation!!!");
 	timer0_init();
 	
 	sei();
+	
+	Read_Accel_Gyro(accel, gyro);
+	Read_Magnetometer(mag);
+	float ax = accel[1] * 9.81 * 2.0 / 32768.0; // ∵ ±2g 범위에서 16bit 해상도로 측정 -> [m/s^2]
+	float ay = accel[0] * 9.81 * 2.0 / 32768.0;
+	float az = - accel[2] * 9.81 * 2.0 / 32768.0;
+	float gx = gyro[1] * (250.0 / 32768.0) * (M_PI / 180.0); // ∵ ±250deg/s 범위에서 16bit 해상도로 측정 -> [rad/s]
+	float gy = gyro[0] * (250.0 / 32768.0) * (M_PI / 180.0);
+	float gz = - gyro[2] * (250.0 / 32768.0) * (M_PI / 180.0);
+	float mx = mag[0] * 4912 / 32760.0; // ∵ ±4912uT 범위에서 16bit 해상도로 측정 -> [uT]
+	float my = mag[1] * 4912 / 32760.0; // x, y 뒤바뀌고 z에는 - 붙은 이유 -> mpu9250 좌표계랑 ak8963 좌표계가 달라서 이를 mpu9250 기준으로 바꿔줌
+	float mz = mag[2] * 4912 / 32760.0;
+	AHRS_Init(q, ax, ay, az, mx, my, mz);
+	
 	
 	//Calibrate_AK8963(magBias, magScale);
 
@@ -73,17 +87,16 @@ int main(void) {
 			Read_Accel_Gyro(accel, gyro);
 			Read_Magnetometer(mag);
 			
-			float ax = accel[0] * 9.81 * 2.0 / 32768.0; // ∵ ±2g 범위에서 16bit 해상도로 측정 -> [m/s^2]
-			float ay = accel[1] * 9.81 * 2.0 / 32768.0;
-			float az = accel[2] * 9.81 * 2.0 / 32768.0;
-			float gx = gyro[0] * (250.0 / 32768.0) * (M_PI / 180.0); // ∵ ±250deg/s 범위에서 16bit 해상도로 측정 -> [rad/s]
-			float gy = gyro[1] * (250.0 / 32768.0) * (M_PI / 180.0);
-			float gz = gyro[2] * (250.0 / 32768.0) * (M_PI / 180.0);
-			float mx = mag[0] * 4912 / 32760.0; // ∵ ±4912uT 범위에서 16bit 해상도로 측정 -> [uT]
-			float my = mag[1] * 4912 / 32760.0; // x, y 뒤바뀌고 z에는 - 붙은 이유 -> mpu9250 좌표계랑 ak8963 좌표계가 달라서 이를 mpu9250 기준으로 바꿔줌
-			float mz = -(mag[2] * 4912 / 32760.0);	
-			
-			MadgwickAHRSupdate(q, gx, gy, gz, ax, ay, az, mx, my, mz);
+			ax = accel[1] * 9.81 * 2.0 / 32768.0; // ∵ ±2g 범위에서 16bit 해상도로 측정 -> [m/s^2]
+			ay = accel[0] * 9.81 * 2.0 / 32768.0;
+			az = - accel[2] * 9.81 * 2.0 / 32768.0;
+			gx = gyro[1] * (250.0 / 32768.0) * (M_PI / 180.0); // ∵ ±250deg/s 범위에서 16bit 해상도로 측정 -> [rad/s]
+			gy = gyro[0] * (250.0 / 32768.0) * (M_PI / 180.0);
+			gz = - gyro[2] * (250.0 / 32768.0) * (M_PI / 180.0);
+			mx = mag[0] * 4912 / 32760.0; // ∵ ±4912uT 범위에서 16bit 해상도로 측정 -> [uT]
+			my = mag[1] * 4912 / 32760.0; // x, y 뒤바뀌고 z에는 - 붙은 이유 -> mpu9250 좌표계랑 ak8963 좌표계가 달라서 이를 mpu9250 기준으로 바꿔줌
+			mz = mag[2] * 4912 / 32760.0;			
+			MadgwickQuaternionUpdate(q, ax, ay, az, gx, gy, gz, mx, my, mz);
 			
 			if (index++ == 10){
 				UART1_transmit_int16((int16_t)10000*q[0]); UART1_transmit_string(",");
