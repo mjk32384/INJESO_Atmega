@@ -12,7 +12,12 @@
 #define Ki 0.1
 #define Kd 0.01
 
-void PWM_init();
+#define MIN_WIDTH 700	//usec
+#define MAX_WIDTH 2300	//usec
+#define NEUTRAL_WIDTH (MAX_WIDTH+MIN_WIDTH)/2
+
+void servo_init();
+
 int16_t PID_control(int16_t target, int16_t current);
 
 void servo_control(int16_t control_value);
