@@ -9,10 +9,14 @@
 #ifndef AHRS_H
 #define AHRS_H
 
+#define beta 1.5
+#define deltat 1/64
+
 #include <avr/io.h>
 #include <util/delay.h>
 
-#define SAMPLE_FREQ 64.0f // Sample frequency in Hz
-
-void MadgwickAHRSupdate(float* q, float gx, float gy, float gz, float ax, float ay, float az, float mx, float my, float mz);
+void Quaternion_rotate(float* q, float v[3], float output[3]);
+void Quaternion_multiply(float q1[3], float q2[3], float output[3]);
+void AHRS_Init(float* q, float ax, float ay, float az, float mx, float my, float mz);
+void MadgwickQuaternionUpdate(float* q, float ax, float ay, float az, float gx, float gy, float gz, float mx, float my, float mz);
 #endif
