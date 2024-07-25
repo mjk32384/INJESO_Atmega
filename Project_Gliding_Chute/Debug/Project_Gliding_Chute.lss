@@ -23,11 +23,11 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   9 .debug_frame  0000064c  00000000  00000000  00007270  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000882  00000000  00000000  000078bc  2**0
+ 10 .debug_str    0000088a  00000000  00000000  000078bc  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000026cd  00000000  00000000  0000813e  2**0
+ 11 .debug_loc    000026cd  00000000  00000000  00008146  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000158  00000000  00000000  0000a80b  2**0
+ 12 .debug_ranges 00000158  00000000  00000000  0000a813  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -145,7 +145,7 @@ Disassembly of section .text:
 
 000000cc <Quaternion_rotate>:
 
-#define beta 1.5
+#define beta 0.8
 #define deltat 1/64
 
 void Quaternion_rotate(float* q, float v[3], float output[3])
@@ -3980,9 +3980,9 @@ void MadgwickQuaternionUpdate(float* q, float ax, float ay, float az, float gx, 
     1fac:	a6 d7       	rcall	.+3916   	; 0x2efa <__mulsf3>
     1fae:	6b 01       	movw	r12, r22
     1fb0:	7c 01       	movw	r14, r24
-    1fb2:	20 e0       	ldi	r18, 0x00	; 0
-    1fb4:	30 e0       	ldi	r19, 0x00	; 0
-    1fb6:	40 ec       	ldi	r20, 0xC0	; 192
+    1fb2:	2d ec       	ldi	r18, 0xCD	; 205
+    1fb4:	3c ec       	ldi	r19, 0xCC	; 204
+    1fb6:	4c e4       	ldi	r20, 0x4C	; 76
     1fb8:	5f e3       	ldi	r21, 0x3F	; 63
     1fba:	6d 89       	ldd	r22, Y+21	; 0x15
     1fbc:	7e 89       	ldd	r23, Y+22	; 0x16
@@ -4053,9 +4053,9 @@ void MadgwickQuaternionUpdate(float* q, float ax, float ay, float az, float gx, 
     203c:	5e d7       	rcall	.+3772   	; 0x2efa <__mulsf3>
     203e:	6b 01       	movw	r12, r22
     2040:	7c 01       	movw	r14, r24
-    2042:	20 e0       	ldi	r18, 0x00	; 0
-    2044:	30 e0       	ldi	r19, 0x00	; 0
-    2046:	40 ec       	ldi	r20, 0xC0	; 192
+    2042:	2d ec       	ldi	r18, 0xCD	; 205
+    2044:	3c ec       	ldi	r19, 0xCC	; 204
+    2046:	4c e4       	ldi	r20, 0x4C	; 76
     2048:	5f e3       	ldi	r21, 0x3F	; 63
     204a:	69 85       	ldd	r22, Y+9	; 0x09
     204c:	7a 85       	ldd	r23, Y+10	; 0x0a
@@ -4124,9 +4124,9 @@ void MadgwickQuaternionUpdate(float* q, float ax, float ay, float az, float gx, 
     20c8:	18 d7       	rcall	.+3632   	; 0x2efa <__mulsf3>
     20ca:	6b 01       	movw	r12, r22
     20cc:	7c 01       	movw	r14, r24
-    20ce:	20 e0       	ldi	r18, 0x00	; 0
-    20d0:	30 e0       	ldi	r19, 0x00	; 0
-    20d2:	40 ec       	ldi	r20, 0xC0	; 192
+    20ce:	2d ec       	ldi	r18, 0xCD	; 205
+    20d0:	3c ec       	ldi	r19, 0xCC	; 204
+    20d2:	4c e4       	ldi	r20, 0x4C	; 76
     20d4:	5f e3       	ldi	r21, 0x3F	; 63
     20d6:	69 81       	ldd	r22, Y+1	; 0x01
     20d8:	7a 81       	ldd	r23, Y+2	; 0x02
@@ -4195,9 +4195,9 @@ void MadgwickQuaternionUpdate(float* q, float ax, float ay, float az, float gx, 
     2154:	d2 d6       	rcall	.+3492   	; 0x2efa <__mulsf3>
     2156:	6b 01       	movw	r12, r22
     2158:	7c 01       	movw	r14, r24
-    215a:	20 e0       	ldi	r18, 0x00	; 0
-    215c:	30 e0       	ldi	r19, 0x00	; 0
-    215e:	40 ec       	ldi	r20, 0xC0	; 192
+    215a:	2d ec       	ldi	r18, 0xCD	; 205
+    215c:	3c ec       	ldi	r19, 0xCC	; 204
+    215e:	4c e4       	ldi	r20, 0x4C	; 76
     2160:	5f e3       	ldi	r21, 0x3F	; 63
     2162:	6d 85       	ldd	r22, Y+13	; 0x0d
     2164:	7e 85       	ldd	r23, Y+14	; 0x0e
@@ -4435,8 +4435,8 @@ void timer0_init() {
     230a:	88 e0       	ldi	r24, 0x08	; 8
     230c:	83 bf       	out	0x33, r24	; 51
 	// 출력 비교 값 설정 (64Hz 주기 생성)
-	OCR0 = 243;  // 16MHz 클럭, 1024 프리스케일러 사용 시 64Hz 주기
-    230e:	83 ef       	ldi	r24, 0xF3	; 243
+	OCR0 = 29;  // 16MHz 클럭, 1024 프리스케일러 사용 시 64Hz 주기
+    230e:	8d e1       	ldi	r24, 0x1D	; 29
     2310:	81 bf       	out	0x31, r24	; 49
 	// 프리스케일러 1024 설정 (CS02 = 1, CS01 = 0, CS00 = 1)
 	TCCR0 |= (1 << CS02) | (1 << CS00);
@@ -5100,7 +5100,7 @@ int main(void) {
     2796:	43 96       	adiw	r24, 0x13	; 19
     2798:	0e 94 d7 06 	call	0xdae	; 0xdae <MadgwickQuaternionUpdate>
 			
-			if (index++ == 10){
+			if (index++ == 20){
     279c:	c3 01       	movw	r24, r6
     279e:	01 96       	adiw	r24, 0x01	; 1
     27a0:	0f b6       	in	r0, 0x3f	; 63
@@ -5108,7 +5108,7 @@ int main(void) {
     27a4:	de bf       	out	0x3e, r29	; 62
     27a6:	0f be       	out	0x3f, r0	; 63
     27a8:	cd bf       	out	0x3d, r28	; 61
-    27aa:	3a e0       	ldi	r19, 0x0A	; 10
+    27aa:	34 e1       	ldi	r19, 0x14	; 20
     27ac:	63 16       	cp	r6, r19
     27ae:	71 04       	cpc	r7, r1
 				UART1_transmit_int16((int16_t)10000*q[0]); UART1_transmit_string(",");

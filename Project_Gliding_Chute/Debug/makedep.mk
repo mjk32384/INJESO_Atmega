@@ -10,5 +10,3 @@ SENSOR.c
 
 serial.c
 
-temp.c
-

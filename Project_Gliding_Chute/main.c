@@ -25,8 +25,8 @@ volatile uint8_t flag = 0;  // 플래그 비트
 void timer0_init() {
 	// CTC 모드 설정 (WGM01 = 1, WGM00 = 0)
 	TCCR0 = (1 << WGM01);
-	// 출력 비교 값 설정 (64Hz 주기 생성)
-	OCR0 = 243;  // 16MHz 클럭, 1024 프리스케일러 사용 시 64Hz 주기
+	// 출력 비교 값 설정 (512Hz 주기 생성)
+	OCR0 = 29;  // 16MHz 클럭, 1024 프리스케일러 사용 시 512Hz 주기
 	// 프리스케일러 1024 설정 (CS02 = 1, CS01 = 0, CS00 = 1)
 	TCCR0 |= (1 << CS02) | (1 << CS00);
 	// 출력 비교 인터럽트 허용
@@ -98,7 +98,7 @@ int main(void) {
 			mz = mag[2] * 4912 / 32760.0;			
 			MadgwickQuaternionUpdate(q, ax, ay, az, gx, gy, gz, mx, my, mz);
 			
-			if (index++ == 10){
+			if (index++ == 20){
 				UART1_transmit_int16((int16_t)10000*q[0]); UART1_transmit_string(",");
 				UART1_transmit_int16((int16_t)10000*q[1]); UART1_transmit_string(",");
 				UART1_transmit_int16((int16_t)10000*q[2]); UART1_transmit_string(",");
