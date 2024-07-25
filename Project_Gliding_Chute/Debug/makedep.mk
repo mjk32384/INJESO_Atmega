@@ -6,6 +6,11 @@ AHRS.c
 
 main.c
 
+<<<<<<< HEAD
+=======
+PID.c
+
+>>>>>>> control
 SENSOR.c
 
 serial.c

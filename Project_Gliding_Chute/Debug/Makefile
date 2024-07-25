@@ -39,6 +39,10 @@ SUBDIRS :=
 C_SRCS +=  \
 ../AHRS.c \
 ../main.c \
+<<<<<<< HEAD
+=======
+../PID.c \
+>>>>>>> control
 ../SENSOR.c \
 ../serial.c
 
@@ -52,24 +56,40 @@ ASM_SRCS +=
 OBJS +=  \
 AHRS.o \
 main.o \
+<<<<<<< HEAD
+=======
+PID.o \
+>>>>>>> control
 SENSOR.o \
 serial.o
 
 OBJS_AS_ARGS +=  \
 AHRS.o \
 main.o \
+<<<<<<< HEAD
+=======
+PID.o \
+>>>>>>> control
 SENSOR.o \
 serial.o
 
 C_DEPS +=  \
 AHRS.d \
 main.d \
+<<<<<<< HEAD
+=======
+PID.d \
+>>>>>>> control
 SENSOR.d \
 serial.d
 
 C_DEPS_AS_ARGS +=  \
 AHRS.d \
 main.d \
+<<<<<<< HEAD
+=======
+PID.d \
+>>>>>>> control
 SENSOR.d \
 serial.d
 
@@ -101,6 +121,16 @@ LINKER_SCRIPT_DEP+=
 	@echo Finished building: $<
 	
 
+<<<<<<< HEAD
+=======
+./PID.o: .././PID.c
+	@echo Building file: $<
+	@echo Invoking: AVR/GNU C Compiler : 5.4.0
+	$(QUOTE)C:\Program Files (x86)\Atmel\Studio\7.0\toolchain\avr8\avr8-gnu-toolchain\bin\avr-gcc.exe$(QUOTE)  -x c -funsigned-char -funsigned-bitfields -DDEBUG -DF_CPU=16000000  -I"C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\include"  -Og -ffunction-sections -fdata-sections -fpack-struct -fshort-enums -mrelax -g2 -Wall -mmcu=atmega128 -B "C:\Program Files (x86)\Atmel\Studio\7.0\Packs\atmel\ATmega_DFP\1.7.374\gcc\dev\atmega128" -c -std=gnu99 -MD -MP -MF "$(@:%.o=%.d)" -MT"$(@:%.o=%.d)" -MT"$(@:%.o=%.o)"   -o "$@" "$<" 
+	@echo Finished building: $<
+	
+
+>>>>>>> control
 ./SENSOR.o: .././SENSOR.c
 	@echo Building file: $<
 	@echo Invoking: AVR/GNU C Compiler : 5.4.0

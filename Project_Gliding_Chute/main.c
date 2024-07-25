@@ -12,6 +12,7 @@
 #include "serial.h"
 #include "sensor.h"
 #include "AHRS.h"
+#include "PID.h"
 
 #define BUFFER_SIZE 128
 #define SAMPLING_RATE 64
@@ -35,15 +36,6 @@ void timer0_init() {
 
 ISR(TIMER0_COMP_vect) {
 	flag = 1;  // 플래그 비트 설정
-}
-ISR(USART0_RX_vect) {
-	
-	UART0_receive_string(uart0_buffer, '\n');
-}
-ISR(USART1_RX_vect) {
-
-	UART1_receive_string(uart1_buffer, '\n');
-	
 }
 
 
@@ -111,22 +103,35 @@ int main(void) {
 	}
 }
 
+
 /*
-
-
 int main(void) {
-
+	
 	UART1_init(57600);
-	UART1_receive();
-	UART1_transmit_string_LF("START!!!");
+	UART1_transmit_string_LF("Start!");
+	servo_init();
+	sei();
 	
-	
+
 	while (1) {
-		UART1_transmit_int16(1231);
-		UART1_transmit('\n');
+		//int16_t control_value = PID_control(target_value, current_value);
+		
+		UART1_transmit_string_LF("Servo input: -50");
+		servo_control(-50);
 		_delay_ms(500);
+		
+		UART1_transmit_string_LF("Servo input: 0");
+		servo_control(0);
+		_delay_ms(500);
+		
+		UART1_transmit_string_LF("Servo input: 50");
+		servo_control(50);
+		_delay_ms(500);
+		
 	}
 
 	return 0;
-}*/
+
+}
+*/
 
