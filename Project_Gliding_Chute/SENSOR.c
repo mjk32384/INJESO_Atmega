@@ -132,6 +132,12 @@ void Read_Magnetometer(int16_t* mag) {
 	mag[0] = ((int16_t)rawData[1] << 8) | rawData[0];
 	mag[1] = ((int16_t)rawData[3] << 8) | rawData[2];
 	mag[2] = ((int16_t)rawData[5] << 8) | rawData[4];
+	
+	mag[0] -= 50;
+	mag[1] -= 100;
+	mag[2] -= -220;
+	
+	
 }
 
 

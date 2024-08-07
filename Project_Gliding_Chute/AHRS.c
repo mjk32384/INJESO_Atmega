@@ -6,6 +6,7 @@
  */ 
 
 #include <math.h>
+#include "AHRS.h"
 
 #define beta 1.5
 #define deltat 1/64
