@@ -38,7 +38,7 @@ void MPU9250_Init() {
 	// Set accelerometer configuration
 	MPU9250_Write(0x1C, 0x00); // ±2g
 	// Set gyroscope configuration
-	MPU9250_Write(0x1B, 0x00); // ±250 degrees/s
+	MPU9250_Write(0x1B, 0x0C); // ±2000 degrees/s
 	// Enable bypass mode
 	MPU9250_Write(0x37, 0x02);
 }
@@ -113,21 +113,20 @@ void AK8963_Init() {
 	// Enter Fuse ROM access mode
 	AK8963_Write(0x0A, 0x0F);
 	_delay_ms(10);
-	// Power down AK8963
-	AK8963_Write(0x0A, 0x00);
-	_delay_ms(10);
+	// set continuous measurement mode 2 (100Hz, 16bit)
+	AK8963_Write(0x0A, 0x16);
+	_delay_ms(20);
 }
 
 void Read_Magnetometer(int16_t* mag) {
 	uint8_t rawData[6];
-
-	// Set to single measurement mode, 16bit
-	AK8963_Write(0x0A, 0x11);
-	_delay_us(1000);
-
+	
+	AK8963_Read(0x02);	// read ST1
 	for (int i = 0; i < 6; i++) {
 		rawData[i] = AK8963_Read(0x03 + i);
 	}
+	AK8963_Read(0x09);	// read ST2
+	
 	// Magnetometer data
 	mag[0] = ((int16_t)rawData[1] << 8) | rawData[0];
 	mag[1] = ((int16_t)rawData[3] << 8) | rawData[2];
@@ -137,9 +136,7 @@ void Read_Magnetometer(int16_t* mag) {
 	mag[1] -= 100;
 	mag[2] -= -220;
 	
-	
 }
-
 
 void Calibrate_AK8963(float* magBias, float* magScale) {
 	uint16_t ii = 0, sample_count = 1000;
