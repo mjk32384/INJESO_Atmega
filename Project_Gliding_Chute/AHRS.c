@@ -6,9 +6,9 @@
  */ 
 
 #include <math.h>
+#include "AHRS.h"
 
-#define beta 1.5
-#define deltat 1/64
+
 
 void Quaternion_rotate(float* q, float v[3], float output[3])
 {
@@ -48,8 +48,6 @@ void Quaternion_multiply(float q1[3], float q2[3], float output[3])
     output[2] = q1[0]   *q2[2] - q1[1]*q2[3] + q1[2]*q2[0]    + q1[3]*q2[1];
     output[3] = q1[0]   *q2[3] + q1[1]*q2[2] - q1[2]*q2[1] + q1[3]*q2[0]   ;
 }
-
-
 
 void AHRS_Init(float* q, float ax, float ay, float az, float mx, float my, float mz)
 {
