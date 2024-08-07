@@ -123,7 +123,7 @@ void Read_Magnetometer(int16_t* mag) {
 
 	// Set to single measurement mode, 16bit
 	AK8963_Write(0x0A, 0x11);
-	_delay_ms(10);
+	_delay_us(1000);
 
 	for (int i = 0; i < 6; i++) {
 		rawData[i] = AK8963_Read(0x03 + i);
