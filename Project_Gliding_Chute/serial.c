@@ -6,14 +6,15 @@
  */ 
 #include "serial.h"
 
-void UART0_init(unsigned long baud) {
-	unsigned int ubrr = (F_CPU / (16 * baud)) - 1;
+void UART0_init(void) {
+	UBRR0H = 0x00;                     //115,200 baudrate fixed
+	UBRR0L = 16;
+	UCSR0A |= _BV(U2X0);               //2배속 모드
+	// 비동기, 8비트 데이터, 패리티 없음, 1비트 정지 비트 모드
+	UCSR0C |= 0x06;
 	
-	UBRR0H = (unsigned char)(ubrr >> 8);
-	UBRR0L = (unsigned char) ubrr;
-	
-	UCSR0B = (1 << RXEN0) | (1 << TXEN0) | (1 << RXCIE0);
-	UCSR0C = (3 << UCSZ00);
+	UCSR0B |= _BV(RXEN0);               //송수신 가능
+	UCSR0B |= _BV(TXEN0);
 }
 
 void UART0_transmit(unsigned char data) {
@@ -57,14 +58,15 @@ void UART0_transmit_int16(int16_t value) {
 	UART0_transmit_string(buffer);  // 변환된 문자열을 UART0으로 송신
 }
 
-void UART1_init(unsigned long baud) {
-	unsigned int ubrr = (F_CPU / (16 * baud)) - 1;
+void UART1_init(void) {
+	UBRR1H = 0x00;                     //115,200 baudrate fixed
+	UBRR1L = 16;
+	UCSR1A |= _BV(U2X1);               //2배속 모드
+	// 비동기, 8비트 데이터, 패리티 없음, 1비트 정지 비트 모드
+	UCSR1C |= 0x06;
 	
-	UBRR1H = (unsigned char)(ubrr >> 8);
-	UBRR1L = (unsigned char)ubrr;
-	
-	UCSR1B = (1 << RXEN1) | (1 << TXEN1) | (1 << RXCIE1);
-	UCSR1C = (3 << UCSZ10);
+	UCSR1B |= _BV(RXEN1);               //송수신 가능
+	UCSR1B |= _BV(TXEN1);
 }
 
 void UART1_transmit(unsigned char data) {

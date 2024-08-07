@@ -168,7 +168,7 @@ int main(void) {
 	float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};
 
 	int index = 0;
-	UART1_init(57600);
+	UART0_init();
 	
 	//UART1_transmit_string_LF("Start initiation!!!");
 	I2C_Init();

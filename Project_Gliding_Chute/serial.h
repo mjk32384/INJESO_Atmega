@@ -10,9 +10,9 @@
 #include <avr/io.h>
 #include <stdlib.h>
 
-// UART 초기화 함수
-void UART0_init(unsigned long baud);
-void UART1_init(unsigned long baud);
+// UART 초기화 함수 (115,200으로 보드레이트 고정)
+void UART0_init(void);
+void UART1_init(void);
 
 // 데이터 송신 함수
 void UART0_transmit(unsigned char data);
