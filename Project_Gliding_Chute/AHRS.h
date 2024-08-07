@@ -9,8 +9,8 @@
 #ifndef AHRS_H
 #define AHRS_H
 
-#define beta 1.5
-#define deltat 1/512
+#define beta 0.1
+#define deltat 0.0277
 
 #include <avr/io.h>
 #include <util/delay.h>
