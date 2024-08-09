@@ -8,8 +8,6 @@
 #include <math.h>
 #include "AHRS.h"
 
-#define beta 0.8
-#define deltat 1/64
 
 void Quaternion_rotate(float* q, float v[3], float output[3])
 {

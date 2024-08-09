@@ -21,7 +21,7 @@ char uart1_buffer[BUFFER_SIZE];
 
 
 volatile uint8_t flag = 0;  // 플래그 비트
-
+volatile uint8_t print_flag = 0;  // 플래그 비트 
 volatile uint32_t overflow_count = 0;
 
 // 타이머3 초기화 함수
@@ -38,11 +38,13 @@ void timer0_init() {
 	// CTC 모드 설정 (WGM01 = 1, WGM00 = 0)
 	TCCR0 = (1 << WGM01);
 	// 출력 비교 값 설정 (64Hz 주기 생성)
-	OCR0 = 243;  // 16MHz 클럭, 1024 프리스케일러 사용 시 128Hz 주기
+	OCR0 = 196;  // 16MHz 클럭, 1024 프리스케일러 사용 시 79.719Hz 주기
 	// 프리스케일러 1024 설정 (CS02 = 1, CS01 = 0, CS00 = 1)
 	TCCR0 |= (1 << CS02) | (1 << CS00);
 	// 출력 비교 인터럽트 허용
 	TIMSK |= (1 << OCIE0);
+	
+	TCNT0 = 0; // 카운터값 초기화
 	
 }
 
@@ -67,7 +69,7 @@ int16_t ticks_to_microseconds(uint32_t ticks) {
 	return (int16_t)microseconds;
 }
 
-
+/*
 int main(void) {
 	
 	int16_t accel[3], gyro[3], mag[3];
@@ -113,7 +115,7 @@ int main(void) {
 	
 	Read_Accel_Gyro(accel, gyro);
 	//Read_Magnetometer(mag);
-	/*
+	
 	ax = accel[1]; // ∵ ±2g 범위에서 16bit 해상도로 측정 -> [m/s^2]
 	ay = accel[0]; //
 	az = - accel[2]; //
@@ -123,7 +125,7 @@ int main(void) {
 	mx = mag[0]; // ∵ ±4912uT 범위에서 16bit 해상도로 측정 -> [uT]
 	my = mag[1]; //
 	mz = mag[2]; //
-	*/
+	
 	//MadgwickQuaternionUpdate(q, ax, ay, az, gx, gy, gz, mx, my, mz);
 	
 	
@@ -152,9 +154,9 @@ int main(void) {
 	return 0;
 }
 
+*/
 
 
-/*
 int main(void) {
 	int16_t accel[3], gyro[3], mag[3];
 	float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};
@@ -162,13 +164,13 @@ int main(void) {
 	int index = 0;
 	UART0_init();
 	
-	UART0_transmit_string_LF("Start initiation!!!");
+	//UART0_transmit_string_LF("Start initiation!!!");
 	I2C_Init();
 	MPU9250_Init();
 	AK8963_Init();
 	
-	UART0_transmit_string_LF("Complete initiation!!!");
-	//timer0_init();
+	//UART0_transmit_string_LF("Complete initiation!!!");
+	
 
 	
 	sei();
@@ -178,7 +180,7 @@ int main(void) {
 	float ax = accel[1]; // * 9.81 * 2.0 / 32768.0; // ∵ ±2g 범위에서 16bit 해상도로 측정 -> [m/s^2]
 	float ay = accel[0]; // * 9.81 * 2.0 / 32768.0; // x, y 뒤바뀌고 z에는 - 붙은 이유 -> mpu9250 좌표계랑 ak8963 좌표계가 달라서 이를 ak8963 기준으로 바꿔줌
 	float az = - accel[2]; // * 9.81 * 2.0 / 32768.0;
-	float gx = gyro[1] * (2000.0 / 32768.0) * (M_PI / 180.0); // ∵ ±250deg/s 범위에서 16bit 해상도로 측정 -> [rad/s]
+	float gx = gyro[1] * (2000.0 / 32768.0) * (M_PI / 180.0); // ∵ ±2000deg/s 범위에서 16bit 해상도로 측정 -> [rad/s]
 	float gy = gyro[0] * (2000.0 / 32768.0) * (M_PI / 180.0);
 	float gz = - gyro[2] * (2000.0 / 32768.0) * (M_PI / 180.0);
 	float mx = mag[0]; // * 4912 / 32760.0; // ∵ ±4912uT 범위에서 16bit 해상도로 측정 -> [uT]
@@ -186,30 +188,99 @@ int main(void) {
 	float mz = mag[2]; // * 4912 / 32760.0;
 	AHRS_Init(q, ax, ay, az, mx, my, mz);
 	
-	
+	timer0_init();
 	while (1) {
-		Read_Accel_Gyro(accel, gyro);
-		Read_Magnetometer(mag);
 		
-		ax = accel[1] ;// * 9.81 * 2.0 / 32768.0; // ∵ ±2g 범위에서 16bit 해상도로 측정 -> [m/s^2]
-		ay = accel[0] ;// * 9.81 * 2.0 / 32768.0;
-		az = - accel[2];// * 9.81 * 2.0 / 32768.0;
-		gx = gyro[1] * (2000.0 / 32768.0) * (M_PI / 180.0); // ∵ ±2000deg/s 범위에서 16bit 해상도로 측정 -> [rad/s]
-		gy = gyro[0] * (2000.0 / 32768.0) * (M_PI / 180.0);
-		gz = - gyro[2] * (2000.0 / 32768.0) * (M_PI / 180.0);
-		mx = mag[0] ;// * 4912 / 32760.0; // ∵ ±4912uT 범위에서 16bit 해상도로 측정 -> [uT]
-		my = mag[1] ;//  * 4912 / 32760.0; 
-		mz = mag[2] ;// * 4912 / 32760.0;
+		if(flag==1) {
+			Read_Accel_Gyro(accel, gyro);
+			Read_Magnetometer(mag);
+		
+			ax = accel[1] ;// * 9.81 * 2.0 / 32768.0; // ∵ ±2g 범위에서 16bit 해상도로 측정 -> [m/s^2]
+			ay = accel[0] ;// * 9.81 * 2.0 / 32768.0;
+			az = - accel[2];// * 9.81 * 2.0 / 32768.0;
+			gx = gyro[1] * (2000.0 / 32768.0) * (M_PI / 180.0); // ∵ ±2000deg/s 범위에서 16bit 해상도로 측정 -> [rad/s]
+			gy = gyro[0] * (2000.0 / 32768.0) * (M_PI / 180.0);
+			gz = - gyro[2] * (2000.0 / 32768.0) * (M_PI / 180.0);
+			mx = mag[0] ;// * 4912 / 32760.0; // ∵ ±4912uT 범위에서 16bit 해상도로 측정 -> [uT]
+			my = mag[1] ;//  * 4912 / 32760.0; 
+			mz = mag[2] ;// * 4912 / 32760.0;
 						
-		MadgwickQuaternionUpdate(q, ax, ay, az, gx, gy, gz, mx, my, mz);
+			MadgwickQuaternionUpdate(q, ax, ay, az, gx, gy, gz, mx, my, mz);
+			
+			if(print_flag++ == 9){
+				UART0_transmit_int16((int16_t)(10000*q[0])); UART0_transmit(',');
+				UART0_transmit_int16((int16_t)(-10000*q[1])); UART0_transmit(',');
+				UART0_transmit_int16((int16_t)(-10000*q[2])); UART0_transmit(',');
+				UART0_transmit_int16((int16_t)(-10000*q[3])); UART0_transmit('\n');
+				print_flag = 0;
+			}
+			flag = 0;
+		}
 		
-		UART0_transmit_int16((int16_t)(10000*q[0])); UART0_transmit_string(",");
-		UART0_transmit_int16((int16_t)(10000*q[1])); UART0_transmit_string(",");
-		UART0_transmit_int16((int16_t)(10000*q[2])); UART0_transmit_string(",");
-		UART0_transmit_int16((int16_t)(10000*q[3])); UART0_transmit('\n');
-		_delay_ms(10);
-
+		
 	}
 }
 
-	*/	
+/*
+int main(void) {
+	int16_t accel[3], gyro[3], mag[3];
+	float q[4] = {1.0f, 0.0f, 0.0f, 0.0f};
+
+	int index = 0;
+	UART0_init();
+	
+	//UART0_transmit_string_LF("Start initiation!!!");
+	I2C_Init();
+	MPU9250_Init();
+	AK8963_Init();
+	
+	//UART0_transmit_string_LF("Complete initiation!!!");
+	
+
+	
+	sei();
+	
+	Read_Accel_Gyro(accel, gyro);
+	Read_Magnetometer(mag);
+	float ax = accel[1]; // * 9.81 * 2.0 / 32768.0; // ∵ ±2g 범위에서 16bit 해상도로 측정 -> [m/s^2]
+	float ay = accel[0]; // * 9.81 * 2.0 / 32768.0; // x, y 뒤바뀌고 z에는 - 붙은 이유 -> mpu9250 좌표계랑 ak8963 좌표계가 달라서 이를 ak8963 기준으로 바꿔줌
+	float az = - accel[2]; // * 9.81 * 2.0 / 32768.0;
+	float gx = gyro[1] * (2000.0 / 32768.0) * (M_PI / 180.0); // ∵ ±2000deg/s 범위에서 16bit 해상도로 측정 -> [rad/s]
+	float gy = gyro[0] * (2000.0 / 32768.0) * (M_PI / 180.0);
+	float gz = - gyro[2] * (2000.0 / 32768.0) * (M_PI / 180.0);
+	float mx = mag[0]; // * 4912 / 32760.0; // ∵ ±4912uT 범위에서 16bit 해상도로 측정 -> [uT]
+	float my = mag[1]; // * 4912 / 32760.0;
+	float mz = mag[2]; // * 4912 / 32760.0;
+	AHRS_Init(q, ax, ay, az, mx, my, mz);
+	
+	timer0_init();
+	while (1) {
+		
+		if(flag==1) {
+			Read_Accel_Gyro(accel, gyro);
+			Read_Magnetometer(mag);
+			
+			ax = accel[1] ;// * 9.81 * 2.0 / 32768.0; // ∵ ±2g 범위에서 16bit 해상도로 측정 -> [m/s^2]
+			ay = accel[0] ;// * 9.81 * 2.0 / 32768.0;
+			az = - accel[2];// * 9.81 * 2.0 / 32768.0;
+			gx = gyro[1] * (2000.0 / 32768.0) * (M_PI / 180.0); // ∵ ±2000deg/s 범위에서 16bit 해상도로 측정 -> [rad/s]
+			gy = gyro[0] * (2000.0 / 32768.0) * (M_PI / 180.0);
+			gz = - gyro[2] * (2000.0 / 32768.0) * (M_PI / 180.0);
+			mx = mag[0] ;// * 4912 / 32760.0; // ∵ ±4912uT 범위에서 16bit 해상도로 측정 -> [uT]
+			my = mag[1] ;//  * 4912 / 32760.0;
+			mz = mag[2] ;// * 4912 / 32760.0;
+			
+			MadgwickQuaternionUpdate(q, ax, ay, az, gx, gy, gz, mx, my, mz);
+			
+			if(print_flag++ == 9){
+				UART0_transmit_int16(mag[0]); UART0_transmit(',');
+				UART0_transmit_int16(mag[1]); UART0_transmit(',');
+				UART0_transmit_int16(mag[2]); UART0_transmit('\n');
+				print_flag = 0;
+			}
+			flag = 0;
+		}
+		
+		
+	}
+}*/

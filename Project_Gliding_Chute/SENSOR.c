@@ -38,7 +38,7 @@ void MPU9250_Init() {
 	// Set accelerometer configuration
 	MPU9250_Write(0x1C, 0x00); // ±2g
 	// Set gyroscope configuration
-	MPU9250_Write(0x1B, 0x0C); // ±2000 degrees/s
+	MPU9250_Write(0x1B, 0x18); // ±2000 degrees/s
 	// Enable bypass mode
 	MPU9250_Write(0x37, 0x02);
 }
@@ -120,6 +120,7 @@ void AK8963_Init() {
 
 void Read_Magnetometer(int16_t* mag) {
 	uint8_t rawData[6];
+	int16_t cal_mag[3];
 	
 	AK8963_Read(0x02);	// read ST1
 	for (int i = 0; i < 6; i++) {
@@ -128,13 +129,18 @@ void Read_Magnetometer(int16_t* mag) {
 	AK8963_Read(0x09);	// read ST2
 	
 	// Magnetometer data
-	mag[0] = ((int16_t)rawData[1] << 8) | rawData[0];
-	mag[1] = ((int16_t)rawData[3] << 8) | rawData[2];
-	mag[2] = ((int16_t)rawData[5] << 8) | rawData[4];
+	cal_mag[0] = ((int16_t)rawData[1] << 8) | rawData[0];
+	cal_mag[1] = ((int16_t)rawData[3] << 8) | rawData[2];
+	cal_mag[2] = ((int16_t)rawData[5] << 8) | rawData[4];
 	
-	mag[0] -= 50;
-	mag[1] -= 100;
-	mag[2] -= -220;
+	cal_mag[0] -= 210;
+	cal_mag[1] -= 200;
+	cal_mag[2] -= -240;
+	
+	mag[0] = (int16_t)(0.999*cal_mag[0]  - 0.0082*cal_mag[1] - 0.0016*cal_mag[2]);
+	mag[1] = (int16_t)(-0.0082*cal_mag[0]  + 0.9988*cal_mag[1] + 0.0481*cal_mag[2]);
+	mag[2] = (int16_t)(-0.0016*cal_mag[0]  + 0.0481*cal_mag[1] + 1.0045*cal_mag[2]);
+	 
 	
 }
 
