@@ -209,9 +209,9 @@ int main(void) {
 			
 			if(print_flag++ == 9){
 				UART0_transmit_int16((int16_t)(10000*q[0])); UART0_transmit(',');
-				UART0_transmit_int16((int16_t)(-10000*q[1])); UART0_transmit(',');
-				UART0_transmit_int16((int16_t)(-10000*q[2])); UART0_transmit(',');
-				UART0_transmit_int16((int16_t)(-10000*q[3])); UART0_transmit('\n');
+				UART0_transmit_int16((int16_t)(10000*q[1])); UART0_transmit(',');
+				UART0_transmit_int16((int16_t)(10000*q[2])); UART0_transmit(',');
+				UART0_transmit_int16((int16_t)(10000*q[3])); UART0_transmit('\n');
 				print_flag = 0;
 			}
 			flag = 0;
