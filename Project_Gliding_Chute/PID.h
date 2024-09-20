@@ -8,16 +8,16 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
-#define Kp 1.0
-#define Ki 0.1
-#define Kd 0.01
+#define Kp 200
+#define Ki 0
+#define Kd 0
 
-#define MIN_WIDTH 700	//usec
-#define MAX_WIDTH 2300	//usec
-#define NEUTRAL_WIDTH (MAX_WIDTH+MIN_WIDTH)/2
+#define MIN_WIDTH 1000	//usec
+#define MAX_WIDTH 2000	//usec
+#define NEUTRAL_WIDTH 1500
 
 void servo_init();
 
-int16_t PID_control(int16_t target, int16_t current);
+int16_t PID_control(float target, float current);
 
 void servo_control(int16_t control_value);

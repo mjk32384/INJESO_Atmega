@@ -59,9 +59,9 @@ void Read_Accel_Gyro(int16_t* accel, int16_t* gyro) {
 	gyro[2] = ((int16_t)rawData[12] << 8) | rawData[13];
 
 	// Gyro Calibrated data
-	gyro[0] -= 4; //gyroBias[0];
-	gyro[1] -= 64; //gyroBias[1];
-	gyro[2] -= 35; //gyroBias[2];
+	gyro[0] -= -23; //gyroBias[0];
+	gyro[1] -= 25; //gyroBias[1];
+	gyro[2] -= -28; //gyroBias[2];
 }
 
 void Calibrate_Gyro(int16_t* gyroBias) {
@@ -133,15 +133,19 @@ void Read_Magnetometer(int16_t* mag) {
 	cal_mag[1] = ((int16_t)rawData[3] << 8) | rawData[2];
 	cal_mag[2] = ((int16_t)rawData[5] << 8) | rawData[4];
 	
-	cal_mag[0] -= 210;
-	cal_mag[1] -= 200;
-	cal_mag[2] -= -240;
+	cal_mag[0] -= 172;
+	cal_mag[1] -= 111;
+	cal_mag[2] -= -346;
 	
-	mag[0] = (int16_t)(0.999*cal_mag[0]  - 0.0082*cal_mag[1] - 0.0016*cal_mag[2]);
-	mag[1] = (int16_t)(-0.0082*cal_mag[0]  + 0.9988*cal_mag[1] + 0.0481*cal_mag[2]);
-	mag[2] = (int16_t)(-0.0016*cal_mag[0]  + 0.0481*cal_mag[1] + 1.0045*cal_mag[2]);
-	 
+	mag[0] = (int16_t)(0.9887*cal_mag[0]  - 0.0095*cal_mag[1] - 0.0098*cal_mag[2]);
+	mag[1] = (int16_t)(-0.0095*cal_mag[0]  + 0.9868*cal_mag[1] + 0.0526*cal_mag[2]);
+	mag[2] = (int16_t)(-0.0098*cal_mag[0]  + 0.0526*cal_mag[1] + 1.0280*cal_mag[2]);
 	
+	/*
+	mag[0] = cal_mag[0];
+	mag[1] = cal_mag[1];
+	mag[2] = cal_mag[2];
+	*/
 }
 
 void Calibrate_AK8963(float* magBias, float* magScale) {

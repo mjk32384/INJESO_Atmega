@@ -6,28 +6,24 @@
  */
 #include "PID.h"
 
+
 void servo_init() {
-	DDRB |= (1<<PB5); // PB5 (OC1A) as output
+	DDRB |= (1<<PB5);
+	// 타이머1 설정 (Fast PWM 모드, 50Hz 주파수 생성)
+	TCCR1A |= (1 << WGM11) | (1 << COM1A1); // Fast PWM, 비반전 모드
+	TCCR1B |= (1 << WGM12) | (1 << WGM13) | (1 << CS11); // Prescaler 8
 	
-	// Fast PWM mode
-	TCCR1A = 0xAA;
-	TCCR1B = 0x18;;
-	
-	ICR1 = 10000*2; // fPWM = 100Hz (10ms period)
-	
-	OCR1A = NEUTRAL_WIDTH*2;	//set servo position to neutral
-	
-	TCCR1B |= (2<<CS10); // prescaler 8
+	ICR1 = 39999;  // 50Hz 주기를 위한 TOP 값 (16MHz / (8 * 50Hz)) - 1
 }
 
 
-int16_t PID_control(int16_t target, int16_t current) {
-	static int16_t previous_error = 0;
-	static int16_t integral = 0;
+int16_t PID_control(float target, float current) {
+	static float previous_error = 0;
+	static float integral = 0;
 
-	int16_t error = target - current;
+	float error = target - current;
 	integral += error;
-	int16_t derivative = error - previous_error;
+	float derivative = error - previous_error;
 
 	int16_t output = (Kp * error) + (Ki * integral) + (Kd * derivative);
 	previous_error = error;
