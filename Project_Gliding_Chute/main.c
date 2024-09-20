@@ -116,13 +116,12 @@ int main(void) {
 			
 			if(print_flag++ == 9){
 				pressure = 1013;
-				split_master_data(q, servo_input, pressure, SPI_txbuffer);
-				SPI_MasterTransfer(SPI_txbuffer, SPI_rxbuffer);
-				concat_slave_data(&lat, &lon, SPI_rxbuffer);
-				//UART0_transmit_int16( (int16_t)(10000*q[0]) ); UART0_transmit(',');
-				//UART0_transmit_int16( (int16_t)(10000*q[1]) ); UART0_transmit(',');
-				//UART0_transmit_int16( (int16_t)(10000*q[2]) ); UART0_transmit(',');
-				//UART0_transmit_int16( (int16_t)(10000*q[3]) ); UART0_transmit('\n');
+				//split_master_data(q, servo_input, pressure, SPI_txbuffer);
+				//SPI_MasterTransfer(SPI_txbuffer, SPI_rxbuffer);
+				//concat_slave_data(&lat, &lon, SPI_rxbuffer);
+				UART0_transmit_int16( (int16_t)(mag[0]) ); UART0_transmit(',');
+				UART0_transmit_int16( (int16_t)(mag[1]) ); UART0_transmit(',');
+				UART0_transmit_int16( (int16_t)(mag[2]) ); UART0_transmit('\n');
 				//UART0_transmit_int16(servo_input);UART0_transmit('\n');
 				print_flag = 0;
 				

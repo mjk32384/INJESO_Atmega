@@ -133,19 +133,19 @@ void Read_Magnetometer(int16_t* mag) {
 	cal_mag[1] = ((int16_t)rawData[3] << 8) | rawData[2];
 	cal_mag[2] = ((int16_t)rawData[5] << 8) | rawData[4];
 	
-	cal_mag[0] -= 172;
-	cal_mag[1] -= 111;
-	cal_mag[2] -= -346;
+//	cal_mag[0] -= 172;
+//	cal_mag[1] -= 111;
+//	cal_mag[2] -= -346;
 	
-	mag[0] = (int16_t)(0.9887*cal_mag[0]  - 0.0095*cal_mag[1] - 0.0098*cal_mag[2]);
-	mag[1] = (int16_t)(-0.0095*cal_mag[0]  + 0.9868*cal_mag[1] + 0.0526*cal_mag[2]);
-	mag[2] = (int16_t)(-0.0098*cal_mag[0]  + 0.0526*cal_mag[1] + 1.0280*cal_mag[2]);
+//	mag[0] = (int16_t)(0.9887*cal_mag[0]  - 0.0095*cal_mag[1] - 0.0098*cal_mag[2]);
+//	mag[1] = (int16_t)(-0.0095*cal_mag[0]  + 0.9868*cal_mag[1] + 0.0526*cal_mag[2]);
+//	mag[2] = (int16_t)(-0.0098*cal_mag[0]  + 0.0526*cal_mag[1] + 1.0280*cal_mag[2]);
 	
-	/*
+	
 	mag[0] = cal_mag[0];
 	mag[1] = cal_mag[1];
 	mag[2] = cal_mag[2];
-	*/
+	
 }
 
 void Calibrate_AK8963(float* magBias, float* magScale) {
